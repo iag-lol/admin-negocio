@@ -45,7 +45,7 @@ export function NotificationPanel({ onClose }: Props) {
               </div>
               <p className="mt-2 text-sm text-foreground">{item.message}</p>
               {!item.read && (
-                <Button className="mt-2" size="xs" variant="outline" onClick={() => markAsRead(item.id)}>
+                <Button className="mt-2" size="sm" variant="outline" onClick={() => markAsRead(item.id)}>
                   Marcar como leído
                 </Button>
               )}
