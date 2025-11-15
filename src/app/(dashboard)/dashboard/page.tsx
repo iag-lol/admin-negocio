@@ -19,8 +19,9 @@ const KPI_CONFIG: DashboardKpi[] = [
 export default function DashboardPage() {
   const { data, isLoading } = useDashboardData();
 
-  const computedKpis: DashboardKpi[] = data
-    ? [
+  const computedKpis: DashboardKpi[] =
+    data && data.summaries
+      ? [
         {
           id: "sales",
           label: "Ventas consolidadas",
@@ -49,7 +50,7 @@ export default function DashboardPage() {
           trend: "-1%",
         },
       ]
-    : KPI_CONFIG;
+      : KPI_CONFIG;
 
   return (
     <div className="space-y-6">
