@@ -17,35 +17,35 @@ const KPI_CONFIG: DashboardKpi[] = [
 ];
 
 export default function DashboardPage() {
-  const { data, isLoading } = useDashboardData();
+  const { data: dashboardData, isLoading } = useDashboardData();
 
   const computedKpis: DashboardKpi[] =
-    data && data.summaries
+    dashboardData && dashboardData.summaries
       ? [
         {
           id: "sales",
           label: "Ventas consolidadas",
-          value: `$${data.summaries.reduce((acc, store) => acc + store.salesToday, 0).toLocaleString("es-CL")}`,
+          value: `$${dashboardData.summaries.reduce((acc, store) => acc + store.salesToday, 0).toLocaleString("es-CL")}`,
           status: "positive",
           trend: "+5%",
         },
         {
           id: "openShifts",
           label: "Turnos abiertos",
-          value: String(data.summaries.reduce((acc, store) => acc + store.openShifts, 0)),
+          value: String(dashboardData.summaries.reduce((acc, store) => acc + store.openShifts, 0)),
           status: "neutral",
         },
         {
           id: "lowStock",
           label: "Productos críticos",
-          value: `${data.lowStockGlobal.length} productos`,
-          status: data.lowStockGlobal.length > 0 ? "negative" : "positive",
+          value: `${dashboardData.lowStockGlobal.length} productos`,
+          status: dashboardData.lowStockGlobal.length > 0 ? "negative" : "positive",
         },
         {
           id: "attendance",
           label: "Asistencia promedio",
           value: `${Math.round(
-            data.summaries.reduce((acc, store) => acc + store.attendanceRate, 0) / data.summaries.length,
+            dashboardData.summaries.reduce((acc, store) => acc + store.attendanceRate, 0) / dashboardData.summaries.length,
           )}%`,
           trend: "-1%",
         },
@@ -71,11 +71,11 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          <StoreGrid summaries={data?.summaries ?? []} />
+          <StoreGrid summaries={dashboardData?.summaries ?? []} />
 
           <div className="grid gap-4 lg:grid-cols-2">
-            <AlertsPanel alerts={data?.alerts ?? []} />
-            <LowStockWidget items={data?.lowStockGlobal ?? []} />
+            <AlertsPanel alerts={dashboardData?.alerts ?? []} />
+            <LowStockWidget items={dashboardData?.lowStockGlobal ?? []} />
           </div>
 
           <Card>
