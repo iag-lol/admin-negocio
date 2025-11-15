@@ -29,7 +29,7 @@ export async function signSessionToken(payload: SessionPayload) {
 export async function verifySessionToken(token: string) {
   try {
     const result = await jwtVerify(token, getSecretKey());
-    return result.payload as SessionPayload;
+    return result.payload as unknown as SessionPayload;
   } catch {
     return null;
   }
