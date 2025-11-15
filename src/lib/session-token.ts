@@ -19,7 +19,7 @@ function getSecretKey() {
 }
 
 export async function signSessionToken(payload: SessionPayload) {
-  return new SignJWT(payload as Record<string, unknown>)
+  return new SignJWT(payload as unknown as Record<string, unknown>)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(`${SESSION_TTL_SECONDS}s`)
