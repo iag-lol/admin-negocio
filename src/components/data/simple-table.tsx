@@ -12,7 +12,7 @@ interface Props<T> {
   emptyMessage?: string;
 }
 
-export function SimpleTable<T extends Record<string, unknown>>({ data, columns, emptyMessage = "Sin datos" }: Props<T>) {
+export function SimpleTable<T>({ data, columns, emptyMessage = "Sin datos" }: Props<T>) {
   return (
     <div className="rounded-md border">
       <Table>
@@ -31,11 +31,11 @@ export function SimpleTable<T extends Record<string, unknown>>({ data, columns, 
               </TableCell>
             </TableRow>
           )}
-          {data.map((row) => (
-            <TableRow key={String(row.id ?? row[columns[0].key])}>
+          {data.map((row, rowIndex) => (
+            <TableRow key={String((row as { id?: string | number })?.id ?? rowIndex)}>
               {columns.map((column) => (
                 <TableCell key={String(column.key)}>
-                  {column.render ? column.render(row) : String(row[column.key] ?? "-")}
+                  {column.render ? column.render(row) : String((row as Record<string, unknown>)[column.key as string] ?? "-")}
                 </TableCell>
               ))}
             </TableRow>
