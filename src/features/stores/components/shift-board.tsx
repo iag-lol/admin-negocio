@@ -37,6 +37,18 @@ const closeSchema = z.object({
   difference: optionalMoney,
 });
 
+const scheduleBlocks = [
+  { label: "Turno mañana", start: "07:00", end: "15:00", roles: ["Cocina", "Cajero"] },
+  { label: "Turno tarde", start: "15:00", end: "22:00", roles: ["Barista", "Supervisor"] },
+  { label: "Turno noche", start: "22:00", end: "06:00", roles: ["Supervisor", "Reposición"] },
+];
+
+const attendanceInsights = [
+  { title: "Atrasos", value: 2, description: "Isaac B. y Tomás G. llegaron 10 min tarde" },
+  { title: "Ausencias", value: 1, description: "Reemplazo solicitado para Carolina" },
+  { title: "Horas extra", value: 4, description: "Revisar aprobación en payroll" },
+];
+
 export function ShiftBoard({ storeId }: { storeId: StoreId }) {
   const queryClient = useQueryClient();
   const { data: shifts = [], isLoading } = useQuery({
@@ -94,11 +106,50 @@ export function ShiftBoard({ storeId }: { storeId: StoreId }) {
             emptyMessage={isLoading ? "Cargando..." : "Sin turnos abiertos"}
           />
         </CardContent>
-        <CardFooter>
-      <NewShiftDialog loading={createMutation.isPending} onSubmit={(values) => createMutation.mutate(values)} />
+        <CardFooter className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <NewShiftDialog loading={createMutation.isPending} onSubmit={(values) => createMutation.mutate(values)} />
           {lowCoverageAlert && <p className="text-sm text-destructive">No hay turnos abiertos. Debes cubrir las próximas horas.</p>}
         </CardFooter>
       </Card>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Planificación diaria</CardTitle>
+            <CardDescription>Asegura cobertura 24/7 del local</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {scheduleBlocks.map((block) => (
+              <div key={block.label} className="rounded-lg border p-3">
+                <div className="flex items-center justify-between text-sm font-medium">
+                  <span>{block.label}</span>
+                  <Badge variant="outline">
+                    {block.start} - {block.end}
+                  </Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">Roles: {block.roles.join(", ")}</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Asistencia y alertas</CardTitle>
+            <CardDescription>Resumen de presentaciones del día</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {attendanceInsights.map((insight) => (
+              <div key={insight.title} className="rounded-lg border p-3">
+                <div className="flex items-center justify-between text-sm font-medium">
+                  <span>{insight.title}</span>
+                  <Badge variant={insight.value > 0 ? "destructive" : "outline"}>{insight.value}</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">{insight.description}</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
