@@ -55,14 +55,21 @@ export function useDashboardData() {
       const summaries = await Promise.all(STORE_IDS.map((store) => loadStoreSummary(store)));
       const lowStockGlobal = summaries.flatMap((summary) => summary.lowStock.map((item) => ({ storeId: summary.storeId, product: item })));
 
-      const alerts = lowStockGlobal.slice(0, 5).map((entry, index) => ({
-        id: `${entry.product.id}-${index}`,
-        title: `${entry.product.name} en ${entry.storeId}`,
-        description: `Stock actual ${entry.product.stock}, mínimo ${entry.product.stock_min ?? entry.product.min_stock}`,
-        severity: entry.product.stock && entry.product.stock <= (entry.product.stock_min ?? entry.product.min_stock ?? 0) ? "critical" : "warning",
-      }));
+      const alerts = lowStockGlobal.slice(0, 5).map((entry, index) => {
+        const severity: "info" | "warning" | "critical" =
+          entry.product.stock && entry.product.stock <= (entry.product.stock_min ?? entry.product.min_stock ?? 0)
+            ? "critical"
+            : "warning";
+        return {
+          id: `${entry.product.id}-${index}`,
+          title: `${entry.product.name} en ${entry.storeId}`,
+          description: `Stock actual ${entry.product.stock}, mínimo ${entry.product.stock_min ?? entry.product.min_stock}`,
+          severity,
+        };
+      });
 
-      return { summaries, lowStockGlobal, alerts };
+      const payload: DashboardData = { summaries, lowStockGlobal, alerts };
+      return payload;
     },
   });
 }
