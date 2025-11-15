@@ -23,13 +23,13 @@ export async function POST(request: Request) {
     try {
       const client = getSupabaseClient(storeId);
       const { data } = await client
-        .from<EmployeeRow>("employees")
+        .from("employees")
         .select("*")
         .eq("rut", rut)
         .eq("is_active", true)
         .maybeSingle();
       if (data) {
-        employee = data;
+        employee = data as EmployeeRow;
         storeMatched = storeId;
         break;
       }

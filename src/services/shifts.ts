@@ -5,7 +5,7 @@ export async function fetchOpenShifts(storeId: StoreId) {
   const client = getSupabaseClient(storeId);
   const table = storeId === "maipu" ? "elianamaipu_shifts" : "shifts";
   const { data, error } = await client
-    .from<Shift>(table)
+    .from(table)
     .select("*")
     .eq(storeId === "maipu" ? "status" : "is_open", storeId === "maipu" ? "open" : true)
     .order(storeId === "maipu" ? "created_at" : "opened_at", { ascending: false })
@@ -16,7 +16,7 @@ export async function fetchOpenShifts(storeId: StoreId) {
     throw error;
   }
 
-  return data ?? [];
+  return (data ?? []) as Shift[];
 }
 
 export interface CreateShiftInput {

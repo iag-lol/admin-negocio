@@ -5,7 +5,7 @@ const TABLE = "admin_messages";
 
 export async function fetchMessages(storeId: StoreId, employeeId?: string) {
   const client = getSupabaseClient(storeId);
-  let query = client.from<AdminMessage>(TABLE).select("*").order("created_at", { ascending: false });
+  let query = client.from(TABLE).select("*").order("created_at", { ascending: false });
 
   query = query.or(
     employeeId
@@ -18,7 +18,7 @@ export async function fetchMessages(storeId: StoreId, employeeId?: string) {
     console.error("messages.fetch", error);
     throw error;
   }
-  return data ?? [];
+  return (data ?? []) as AdminMessage[];
 }
 
 export interface CreateMessageInput {

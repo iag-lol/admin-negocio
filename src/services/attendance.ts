@@ -5,7 +5,7 @@ const TABLE = "attendance";
 
 export async function fetchAttendance(storeId: StoreId, date?: string) {
   const client = getSupabaseClient(storeId);
-  let query = client.from<AttendanceRecord>(TABLE).select("*").order("date", { ascending: false });
+  let query = client.from(TABLE).select("*").order("date", { ascending: false });
   if (date) {
     query = query.eq("date", date);
   }
@@ -14,7 +14,7 @@ export async function fetchAttendance(storeId: StoreId, date?: string) {
     console.error("attendance.fetch", error);
     throw error;
   }
-  return data ?? [];
+  return (data ?? []) as AttendanceRecord[];
 }
 
 export async function recordAttendance(storeId: StoreId, payload: Partial<AttendanceRecord>) {

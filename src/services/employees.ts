@@ -6,7 +6,7 @@ const TABLE = "employees";
 export async function fetchEmployees(storeId: StoreId | "multi" = "elroble") {
   const client = getSupabaseClient(typeof storeId === "string" && storeId !== "multi" ? storeId : "elroble");
   const { data, error } = await client
-    .from<Employee>(TABLE)
+    .from(TABLE)
     .select("*")
     .order("full_name", { ascending: true });
 
@@ -15,7 +15,7 @@ export async function fetchEmployees(storeId: StoreId | "multi" = "elroble") {
     throw error;
   }
 
-  return data ?? [];
+  return (data ?? []) as Employee[];
 }
 
 export interface CreateEmployeeInput {

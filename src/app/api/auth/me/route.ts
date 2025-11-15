@@ -22,7 +22,7 @@ export async function GET() {
     return NextResponse.json({ message: "Configura Supabase", detail: String(error) }, { status: 500 });
   }
   const { data, error } = await client
-    .from<EmployeeRow>("employees")
+    .from("employees")
     .select("id, full_name, role, store_id, rut")
     .eq("id", session.employee_id)
     .maybeSingle();
@@ -34,5 +34,5 @@ export async function GET() {
     return NextResponse.json({ message: "Empleado no encontrado" }, { status: 404 });
   }
 
-  return NextResponse.json({ employee: data });
+  return NextResponse.json({ employee: data as EmployeeRow });
 }

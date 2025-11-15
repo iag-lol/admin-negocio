@@ -5,7 +5,7 @@ const TABLE = "payroll";
 
 export async function fetchPayroll(storeId: StoreId, period?: string) {
   const client = getSupabaseClient(storeId);
-  let query = client.from<PayrollRecord>(TABLE).select("*").order("period", { ascending: false });
+  let query = client.from(TABLE).select("*").order("period", { ascending: false });
   if (period) {
     query = query.eq("period", period);
   }
@@ -14,7 +14,7 @@ export async function fetchPayroll(storeId: StoreId, period?: string) {
     console.error("payroll.fetch", error);
     throw error;
   }
-  return data ?? [];
+  return (data ?? []) as PayrollRecord[];
 }
 
 export interface PayrollInput {

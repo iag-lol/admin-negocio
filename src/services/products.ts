@@ -5,7 +5,7 @@ export async function fetchProducts(storeId: StoreId) {
   const client = getSupabaseClient(storeId);
   const table = storeId === "maipu" ? "elianamaipu_products" : "products";
   const { data, error } = await client
-    .from<Product>(table)
+    .from(table)
     .select("*")
     .order("name", { ascending: true });
 
@@ -14,7 +14,7 @@ export async function fetchProducts(storeId: StoreId) {
     throw error;
   }
 
-  return data ?? [];
+  return (data ?? []) as Product[];
 }
 
 export interface PurchaseProjection {
