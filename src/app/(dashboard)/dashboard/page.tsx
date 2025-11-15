@@ -3,7 +3,7 @@
 import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
-import { useDashboardData } from "@/features/dashboard/hooks/useDashboardData";
+import { useDashboardData, type DashboardData } from "@/features/dashboard/hooks/useDashboardData";
 import { StoreGrid } from "@/features/dashboard/components/store-grid";
 import { AlertsPanel } from "@/features/dashboard/components/alerts-panel";
 import { LowStockWidget } from "@/features/dashboard/components/low-stock-widget";
@@ -17,7 +17,8 @@ const KPI_CONFIG: DashboardKpi[] = [
 ];
 
 export default function DashboardPage() {
-  const { data: dashboardData, isLoading } = useDashboardData();
+  const { data, isLoading } = useDashboardData();
+  const dashboardData = data as DashboardData | undefined;
 
   const computedKpis: DashboardKpi[] =
     dashboardData && dashboardData.summaries
